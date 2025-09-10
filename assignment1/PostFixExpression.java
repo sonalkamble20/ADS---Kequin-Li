@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,15 +25,17 @@ class PostFixExpression
         {
             String str = sc.nextLine();
 
-            System.out.println("The expression to be evaluated is " + str);
             System.out.println();
+            System.out.println("The expression to be evaluated is " + str);
 
             Integer result = token(str);
 
+            if(result != 0)
+                System.out.println("The value of this expression is " + result);
             System.out.println();
-            System.out.println("The value of this expression is " + result);
-            System.out.println();
+
         }
+        System.out.println("Bye-bye!");
     }
 
     public static Integer token(String str)
@@ -41,7 +44,8 @@ class PostFixExpression
 
         Stack<Integer> operands = new Stack<>();
 
-        Pattern pattern = Pattern.compile("(\\d+|[A-Za-z_][A-Za-z0-9_]*|[a-z]|<=|>=|==|!=|&&|\\|\\||\\+|-|\\*|/|_|!|#|\\^|<|>|\\$)");
+        Pattern pattern = Pattern.compile("(-?\\d+|[A-Za-z_][A-Za-z0-9_]*|<=|>=|==|!=|&&|\\|\\||\\+|-|\\*|/|_|!|#|\\^|<|>|\\$)");
+
         Matcher matcher = pattern.matcher(str);
 
         List<String> tokens = new ArrayList<>();
@@ -78,8 +82,10 @@ class PostFixExpression
                     case "#": if(!operands.empty())
                                 operands.push(calc(token, operands.pop()));
                         break;
+                    case "$":
+                        return operands.pop();
 
-                    default: if(token.matches("\\d+(\\.\\d+)?"))
+                    default: if(token.matches("[-+]?\\d+(\\.\\d+)?"))
                                 operands.push(Integer.parseInt(token));
                              else if(token.matches("[A-Za-z_][A-Za-z0-9_]*"))
                              {
@@ -104,35 +110,38 @@ class PostFixExpression
     private static Integer calc(String token, Integer num2, Integer num1)
     {
         Integer result = 0;
-        switch (token)
-        {
-            case "+": result = num2 + num1;
-                break;
-            case "-": result = num1 - num2;
-                break;
-            case "*": result = num2 * num1;
-                break;
-            case "/": result = num1 / num2;
-                break;
-            case "^": result = (int) Math.pow(num1,num2);
-                break;
-            case "<": if(num1 < num2) result = num1; else result = num2;
-                break;
-            case "<=": if(num1 <= num2) result = num1; else result = num2;
-                break;
-            case ">": if(num1 > num2) result = num1; else result = num2;
-                break;
-            case ">=": if(num1 >= num2) result = num1; else result = num2;
-                break;
-            case "==": if(num1.equals(num2)) result = num1; else result = num2;
-                break;
-            case "!=": if(num1.equals(num2)) result = 0; else result = num2;
-                break;
-            case "&&": if((num1!= 0) && (num2!= 0)) result = num1; else result = 0;
-                break;
-            case "||": if((num1!= 0) || (num2!= 0)) result = num1; else result = num2;
-                break;
-        }
+            switch (token)
+            {
+                case "+": result = num2 + num1;
+                    break;
+                case "-": result = num1 - num2;
+                    break;
+                case "*": result = num2 * num1;
+                    break;
+                case "/": if(num2 != 0)
+                              result = num1 / num2;
+                          else
+                              System.out.println("division by 0");
+                    break;
+                case "^": result = (int) Math.pow(num1,num2);
+                    break;
+                case "<": if(num1 < num2) result = 1; else result = 0;
+                    break;
+                case "<=": if(num1 <= num2) result = 1; else result = 0;
+                    break;
+                case ">": if(num1 > num2) result = 1; else result = 0;
+                    break;
+                case ">=": if(num1 >= num2) result = 1; else result = 0;
+                    break;
+                case "==": if(num1.equals(num2)) result = 1; else result = 0;
+                    break;
+                case "!=": if(num1.equals(num2)) result = 0; else result = 1;
+                    break;
+                case "&&": if((num1!= 0) && (num2!= 0)) result = 1; else result = 0;
+                    break;
+                case "||": if((num1!= 0) || (num2!= 0)) result = 1; else result = 0;
+                    break;
+            }
         return result;
     }
 
@@ -144,9 +153,15 @@ class PostFixExpression
         {
             case "_": result = num1 * -1;
                 break;
-            case "#": result = (int) Math.sqrt(num1);
+            case "#": if(num1 > 0)
+                        result = (int) Math.sqrt(num1);
+                      else
+                        System.out.println("sqrt of negative value");
                 break;
-            case "!": result = facto(num1);
+            case "!": if(num1 > 0)
+                        result = facto(num1);
+                      else
+                        System.out.println("factorial of negative value");
 
         }
         return result;
