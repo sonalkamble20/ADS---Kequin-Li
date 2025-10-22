@@ -1,2 +1,0 @@
-2 a + b _ * ! c c ^ 15 / # - $
-value x + value y - != x y <= && $
