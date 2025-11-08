@@ -1,0 +1,36 @@
+CPS526-01              Advanced Data Structures              Fall 2025
+
+                      Assignment #4: Splay Trees
+                        (Due date: 11/14/2025) 
+
+
+Your program implements the splay tree data structure for the dictionary
+abstract data type. 
+
+
+Initially the program reads data from "in.dat", and establishes an
+ordinary binary search tree by inserting the data into the tree. The data
+file contains integers, one per line.
+
+
+Then the program starts an interactive mode. The commands are as follows.
+
+   S 1000 - splay the tree at 1000
+   F 2000 - search/find the node with key 2000
+   I 3000 - insert a node with key 3000
+   D 4000 - delete the node with key 4000
+
+
+For each command, 
+
+1. Report appropriate message after the command is executed. Examples are:
+
+   Splay is done
+   Search is successful
+   Search is unsuccessful
+   The key is inserted into the tree
+   Duplicated keys
+   The key is deleted from the tree
+   The key is not in the tree
+
+2. Display the new tree.

@@ -19,7 +19,6 @@ class PostFixExpression
             throw new RuntimeException(e);
         }
 
-
         System.out.println("Hello! This is a postfix expression calculator.");
         System.out.println();
 
